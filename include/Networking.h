@@ -1,6 +1,8 @@
 #ifndef NETWORKING_H
 #define NETWORKING_H
 
+#include "NetworkingErrors.h"
+
 //Networking Headers
 //---------------------------------------------------------------------------------------------
 #include <arpa/inet.h>
@@ -9,23 +11,24 @@
 #include <sys/socket.h>
 #include <sys/stat.h>
 //---------------------------------------------------------------------------------------------
+#include <errno.h>
 
-typedef callbackFuction int(*functionPtr)(char* data, int size, int error);
+typedef int(*callbackFuction)(char* data, int size, int error);
 
 enum SocketType{
 	UDP,
 	TCP
-}
+};
 
 enum SocketFamily{
 	IPV4,
 	IPV6
-}
+};
 
 enum SocketUser{
 	CLIENT,
 	SERVER
-}
+};
 
 class Networking{
 private:
@@ -43,9 +46,9 @@ public:
 	~Networking();
 
 	int receiveDataCallback(callbackFuction callback, int bufferLength);
-	char* receiveData();
+	int receiveData(char* buffer, int bufferLength);
 
-	int sendData(char* data, struct sockadd_in location);
+	int sendData(char* data, struct sockaddr_in location);
 };
 
 
